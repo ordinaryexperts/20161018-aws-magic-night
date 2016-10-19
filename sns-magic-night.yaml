@@ -1,15 +1,65 @@
+Parameters:
+
+  SubscriptionEmail:
+    Type: String
+    Default: dylan@ordinaryexperts.com
+
 Resources:
+
   SourceBucket:
     Type: AWS::S3::Bucket
     Properties:
       AccessControl: 'Private'
 
+  SnsTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      Topics:
+        - !Ref SnsTopic
+      PolicyDocument:
+        Version: '2012-10-17'
+
+        Statement:
+          -
+            Sid: OwnerFullAccess
+            Effect: 'Allow'
+            Principal: '*'
+            Action:
+              - 'sns:GetTopicAttributes'
+              - 'sns:SetTopicAttributes'
+              - 'sns:AddPermission'
+              - 'sns:RemovePermission'
+              - 'sns:DeleteTopic'
+              - 'sns:Subscribe'
+              - 'sns:ListSubscriptionsByTopic'
+              - 'sns:Publish'
+              - 'sns:Receive'
+            Resource: !Ref SnsTopic
+            Condition:
+              StringEquals:
+                'AWS:SourceOwner': !Ref 'AWS::AccountId'
+          -
+            Sid: SourceBucketToTopic
+            Effect: 'Allow'
+            Principal: '*'
+            Action:
+              - 'sns:Publish'
+            Resource: !Ref SnsTopic
+            Condition:
+              ArnEquals:
+                'aws:SourceArn': !Join ['', ['arn:aws:s3:::', !Ref SourceBucket]]
+
   SnsTopic:
     Type: AWS::SNS::Topic
     Properties:
       DisplayName: 'SD Team 3'
+      Subscription:
+        -
+          Endpoint: !Ref SubscriptionEmail
+          Protocol: 'email'
 
 Outputs:
+
   SourceBucket:
     Value: !Ref SourceBucket
 
