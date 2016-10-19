@@ -4,6 +4,14 @@ Resources:
     Properties:
       AccessControl: 'Private'
 
+  SnsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: 'SD Team 3'
+
 Outputs:
   SourceBucket:
     Value: !Ref SourceBucket
+
+  SnsTopic:
+    Value: !Ref SnsTopic
