@@ -1,0 +1,9 @@
+Resources:
+  SourceBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: 'Private'
+
+Outputs:
+  SourceBucket:
+    Value: !Ref SourceBucket
