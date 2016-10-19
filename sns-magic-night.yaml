@@ -4,6 +4,9 @@ Parameters:
     Type: String
     Default: dylan@ordinaryexperts.com
 
+  SubscriptionPhone:
+    Type: String
+
 Resources:
 
   SourceBucket:
@@ -57,6 +60,9 @@ Resources:
         -
           Endpoint: !Ref SubscriptionEmail
           Protocol: 'email'
+        -
+          Endpoint: !Ref SubscriptionPhone
+          Protocol: 'sms'
 
 Outputs:
 
